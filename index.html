@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>广西高铁行程 · 综合参考图</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f3f7f4 0%, #e8f0ea 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    .poster {
+      max-width: 1200px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 40, 20, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.7);
+      padding: 2rem 2rem 2rem 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.2s;
+    }
+
+    /* 头部 */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      border-bottom: 2px dashed #b8d5c0;
+      padding-bottom: 1.2rem;
+    }
+
+    .title-section h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #1f4f3b, #2d6a4f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.25rem;
+    }
+
+    .title-section .subhead {
+      color: #3f6252;
+      font-weight: 400;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .subhead .tag {
+      background: #d0e6da;
+      color: #1e4a36;
+      padding: 0.25rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .subhead .tag-light {
+      background: #ecf6f0;
+      color: #2d6a4f;
+      border: 1px solid #b8d5c0;
+    }
+
+    .badge {
+      background: #1e4a36;
+      color: #f0f9f4;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 6px 14px rgba(26, 77, 52, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge span {
+      font-size: 1.2rem;
+    }
+
+    /* 网格核心 */
+    .route-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 1.8rem;
+    }
+
+    /* 左侧主推荐卡片 */
+    .main-route {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.6rem 1.8rem;
+      box-shadow: 0 15px 30px -12px rgba(20, 60, 40, 0.2);
+      border: 1px solid #d5e6dc;
+      transition: transform 0.2s;
+    }
+
+    .main-route:hover {
+      transform: translateY(-3px);
+    }
+
+    .card-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #527a63;
+      margin-bottom: 1rem;
+    }
+
+    .card-label .dot {
+      width: 10px;
+      height: 10px;
+      background: #38a169;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.15);
+    }
+
+    .main-route h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0e3525;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .main-route h2 small {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #5f7e6b;
+      background: #eaf3ed;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      margin-left: 10px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .highlight-text {
+      background: #f1f9f4;
+      border-left: 5px solid #2d6a4f;
+      padding: 0.9rem 1rem;
+      border-radius: 0 16px 16px 0;
+      margin: 1.2rem 0 1.2rem 0;
+      font-size: 0.95rem;
+      color: #1e3e30;
+      line-height: 1.5;
+      font-weight: 450;
+    }
+
+    .day-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin: 0.8rem 0 0.4rem;
+    }
+
+    .day-table tr {
+      background: #f9fcfa;
+      border-radius: 14px;
+      transition: background 0.1s;
+    }
+
+    .day-table tr:hover {
+      background: #edf7f1;
+    }
+
+    .day-table td {
+      padding: 0.7rem 0.8rem;
+      border: none;
+      font-size: 0.9rem;
+      vertical-align: middle;
+      color: #1b3b2c;
+    }
+
+    .day-table td:first-child {
+      font-weight: 700;
+      color: #1e6b46;
+      white-space: nowrap;
+      width: 75px;
+      background: #e1f0e7;
+      border-radius: 14px 0 0 14px;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 0.3px;
+    }
+
+    .day-table td:last-child {
+      border-radius: 0 14px 14px 0;
+      color: #173e2d;
+      font-weight: 450;
+    }
+
+    .day-table .route-icon {
+      color: #3f8f65;
+      font-weight: 500;
+      margin-right: 5px;
+      font-size: 1rem;
+    }
+
+    .tips-box {
+      background: #fefcf5;
+      border: 1px solid #f0e3c4;
+      border-radius: 20px;
+      padding: 1.2rem 1.4rem;
+      margin-top: 1.4rem;
+    }
+
+    .tips-box h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #8b6f3c;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tips-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .tips-box li {
+      font-size: 0.87rem;
+      color: #4e4028;
+      display: flex;
+      gap: 10px;
+      line-height: 1.45;
+    }
+
+    .tips-box li::before {
+      content: "⚡";
+      font-size: 0.9rem;
+      color: #b8863d;
+      font-weight: 700;
+    }
+
+    /* 右侧卡片 */
+    .side-routes {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .alt-card {
+      background: #ffffff;
+      border-radius: 2rem;
+      padding: 1.3rem 1.5rem;
+      box-shadow: 0 10px 22px -8px rgba(20, 60, 40, 0.15);
+      border: 1px solid #d5e6dc;
+      transition: all 0.15s;
+    }
+
+    .alt-card:hover {
+      transform: translateX(4px);
+      border-color: #a8c9b7;
+    }
+
+    .alt-card .alt-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.6rem;
+    }
+
+    .alt-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0e3525;
+      letter-spacing: -0.01em;
+    }
+
+    .alt-card .emoji-badge {
+      font-size: 1.5rem;
+      background: #eef5f1;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    }
+
+    .alt-card p {
+      font-size: 0.88rem;
+      color: #3d5c4b;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
+
+    .alt-card .route-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.3rem 0.6rem;
+      font-size: 0.9rem;
+      background: #f1f8f4;
+      padding: 0.6rem 0.9rem;
+      border-radius: 40px;
+      font-weight: 500;
+      color: #1f4f3b;
+      margin-top: 0.4rem;
+    }
+
+    .alt-card .route-line span {
+      background: white;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      border: 1px solid #cfe4d8;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .alt-card .small-note {
+      font-size: 0.78rem;
+      color: #6f8e7d;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 0.6rem;
+    }
+
+    /* 底部总结 */
+    .bottom-summary {
+      background: linear-gradient(105deg, #e9f3ee 0%, #d7e9df 100%);
+      border-radius: 2rem;
+      padding: 1.2rem 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.8rem;
+      border: 1px solid #b8d5c0;
+    }
+
+    .bottom-summary .stat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #1e4a36;
+      font-weight: 500;
+    }
+
+    .bottom-summary .stat .num {
+      background: #1e4a36;
+      color: white;
+      border-radius: 30px;
+      padding: 0.2rem 0.8rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .best-pick {
+      background: #fefdf7;
+      border-radius: 40px;
+      padding: 0.35rem 1rem 0.35rem 1.2rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #2c5a3f;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+    }
+
+    .best-pick span {
+      background: #f6b83d;
+      color: #1e3a2a;
+      padding: 0.25rem 0.9rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* 响应式 */
+    @media (max-width: 850px) {
+      .route-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .poster {
+        padding: 1.5rem;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .title-section h1 {
+        font-size: 1.8rem;
+      }
+
+      .bottom-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 450px) {
+      body {
+        padding: 0.8rem;
+      }
+
+      .poster {
+        padding: 1rem;
+        border-radius: 2rem;
+      }
+
+      .main-route {
+        padding: 1.2rem;
+      }
+
+      .day-table td {
+        font-size: 0.8rem;
+        padding: 0.6rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="title-section">
+        <h1>广西高铁 · 行程参考图</h1>
+        <div class="subhead">
+          <span class="tag">🚄 东莞/广州/深圳出发</span>
+          <span class="tag tag-light">⏱️ 5–10天灵活组合</span>
+          <span class="tag tag-light">🗺️ 单线不绕路</span>
+        </div>
+      </div>
+      <div class="badge">
+        <span>✨</span> 综合最优推荐
+      </div>
+    </div>
+
+    <!-- 主网格 -->
+    <div class="route-grid">
+      <!-- 左侧：主推路线 5天崇左+阳朔 -->
+      <div class="main-route">
+        <div class="card-label">
+          <span class="dot"></span> 主推 · 5天高铁精华
+        </div>
+        <h2>
+          阳朔 + 南宁 + 崇左
+          <small>边境瀑布·喀斯特</small>
+        </h2>
+        <div class="highlight-text">
+          ⛰️ 5天太短，梧州/贺州/柳州/北海塞进去就变赶路。<br>
+          阳朔是山水门面，崇左德天是边境独有，南宁中转，三者组合信息密度最高、反差最大。
+        </div>
+
+        <table class="day-table">
+          <tr>
+            <td>Day 1</td>
+            <td><span class="route-icon">🚄</span>虎门→广州南→阳朔 · 西街、《印象·刘三姐》</td>
+          </tr>
+          <tr>
+            <td>Day 2</td>
+            <td><span class="route-icon">🛶</span>漓江（杨堤–兴坪）、遇龙河竹筏、十里画廊</td>
+          </tr>
+          <tr>
+            <td>Day 3</td>
+            <td><span class="route-icon">🍜</span>阳朔→南宁 · 三街两巷、老友粉、青秀山</td>
+          </tr>
+          <tr>
+            <td>Day 4</td>
+            <td><span class="route-icon">🌊</span>南宁→崇左·德天瀑布 + 明仕田园</td>
+          </tr>
+          <tr>
+            <td>Day 5</td>
+            <td><span class="route-icon">🚅</span>崇左→南宁→虎门 · 中午回广东</td>
+          </tr>
+        </table>
+
+        <div class="tips-box">
+          <h4>📌 关键操作</h4>
+          <ul>
+            <li>崇左高铁只到崇左南站，德天在大新县，建议南宁报「德天一日游直通车」或崇左包车（300–400元/天）</li>
+            <li>Day 3 优先查阳朔→南宁东直达动车（约3.5h），避免两次换乘</li>
+            <li>提前10–15天抢票：广州南↔南宁东、桂林/阳朔↔南宁段节假日最紧</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 右侧：两条备选 + 深度参考 -->
+      <div class="side-routes">
+        <!-- 备选1 桂林柳州北海 -->
+        <div class="alt-card">
+          <div class="alt-head">
+            <h3>桂林 → 柳州 → 北海</h3>
+            <div class="emoji-badge">🏆</div>
+          </div>
+          <p>交通最顺，不走回头路。喀斯特山水 + 螺蛳粉 + 海岛度假，三种体验一次集齐。</p>
+          <div class="route-line">
+            <span>桂林/阳朔</span>→<span>柳州</span>→<span>北海</span>
+          </div>
+          <div class="small-note">
+            ⏰ 4–7天都合适 · 全程高铁无需包车
+          </div>
+        </div>
+
+        <!-- 备选2 深度崇左+黄姚 -->
+        <div class="alt-card">
+          <div class="alt-head">
+            <h3>梧州 · 黄姚 · 崇左</h3>
+            <div class="emoji-badge">🌿</div>
+          </div>
+          <p>8–10天深度线：梧州骑楼、黄姚古镇、阳朔、柳州、南宁、崇左德天、北海涠洲岛。</p>
+          <div class="route-line">
+            <span>梧州</span>·<span>黄姚</span>·<span>阳朔</span>·<span>柳州</span>·<span>南宁</span>·<span>崇左</span>·<span>北海</span>
+          </div>
+          <div class="small-note">
+            📅 时间紧可砍梧州/黄姚，直接从桂林开始
+          </div>
+        </div>
+
+        <!-- 备选3 轻松海边 -->
+        <div class="alt-card">
+          <div class="alt-head">
+            <h3>阳朔 + 北海</h3>
+            <div class="emoji-badge">🏖️</div>
+          </div>
+          <p>不爱赶路首选：阳朔3天 + 北海2天，海边收尾，高铁直达北海，无接车麻烦。</p>
+          <div class="route-line">
+            <span>阳朔</span>→<span>北海</span>
+          </div>
+          <div class="small-note">
+            🚄 北海回广东动车约5h，或飞回
+          </div>
+        </div>
+
+        <!-- 小提醒：崇左贴士 -->
+        <div class="alt-card" style="background:#fafdf9; border-color:#c2ddcf;">
+          <div class="alt-head" style="margin-bottom:0.2rem;">
+            <h3 style="font-size:1rem;">🚐 崇左交通贴士</h3>
+          </div>
+          <p style="font-size:0.82rem; margin-bottom:0;">高铁只到崇左南站，德天/明仕在大新县。推荐：南宁直通车一日游 / 崇左包车。德天门票线上预约，明仕田园租电动车骑行。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部总结：最佳推荐 + 核心数据 -->
+    <div class="bottom-summary">
+      <div class="stat">
+        <span class="num">5天</span> 主推：阳朔+南宁+崇左
+      </div>
+      <div class="stat">
+        <span class="num">6–7天</span> 桂林→柳州→北海
+      </div>
+      <div class="stat">
+        <span class="num">8–10天</span> 梧州·黄姚·崇左·涠洲岛
+      </div>
+      <div class="best-pick">
+        <span>综合首选</span> 桂林/阳朔 → 柳州 → 北海
+      </div>
+    </div>
+
+    <!-- 微说明 -->
+    <div style="margin-top: 1.2rem; font-size: 0.72rem; color: #6e8b7c; text-align: right; border-top: 1px solid #d5e6dc; padding-top: 0.8rem;">
+      🗺️ 根据你多次询问的路线综合整理 · 高铁灵活串联 · 出发地东莞/广州/深圳均适用
+    </div>
+  </div>
+</body>
+</html>
